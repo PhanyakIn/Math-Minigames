@@ -1,0 +1,186 @@
+local MiniGame = {}
+local gameModel = script:WaitForChild("GameModel")
+
+function MiniGame.RunGame()
+	--set up
+	local newGame = gameModel:Clone()
+	newGame.Parent = workspace
+	local StatusGame = workspace.StatusGame.StatusGui
+	StatusGame.Statustext.Text = "Super Maze"
+	
+	local partstatus = workspace.GateSec4
+	local originalColor = partstatus.Color
+	local blinkColor = Color3.fromRGB(255, 160, 250)
+	local stopBlinking = false
+
+	local music = game.SoundService["Running Faster A"]
+	music:Play()
+
+	spawn(function()
+		while not stopBlinking do
+			-- เปลี่ยนเป็นสีขาว
+			partstatus.Color = blinkColor
+			task.wait(1)
+
+			-- เปลี่ยนกลับเป็นสีเดิม
+			partstatus.Color = originalColor
+			task.wait(1)
+		end
+		partstatus.Color = originalColor
+	end)
+	
+	
+	
+	task.wait(1)
+	
+	
+	--Section4 MAZE on workspace
+
+	
+	
+	--spawn monster
+	local rs = game:GetService("ReplicatedStorage")
+	for i = 1,4 do
+		local cloneMonster = rs:FindFirstChild("Monster"):Clone()
+		cloneMonster.PrimaryPart.Position = Vector3.new(math.random(-210, -105), 80, math.random(-205, -105))
+		cloneMonster.Parent = game.Workspace
+		wait(0.5)
+	end
+	
+	local key1 = newGame:WaitForChild("Key1xd55")--cosec
+	local key2 = newGame:WaitForChild("Key2xd55")--sec
+	local key3 = newGame:WaitForChild("Key3xd55")--cot
+
+
+	--random system
+	local JodSec4 =  {"1/sinθ = ?","1/cosθ = ?","cosθ/sinθ = ?"}
+	local JodSec4C = JodSec4[math.random(1, #JodSec4)]
+
+	local LastDoor = newGame.lastDoor
+	LastDoor.LogicSection4.Enabled = true
+
+	print(JodSec4C)
+
+	LastDoor.GuiQuiz.TextQuiz.Text = JodSec4C
+	_G.TeleportPlayers(newGame.SpawnSec4.CFrame + Vector3.yAxis*3 , true)
+	_G.gameStatus.Value = 'Find the key!'
+
+	local positions1 = {
+		Vector3.new(-136.9, -72.95, -90.7),
+		Vector3.new(-179.6, -72.95, -145.7),
+		Vector3.new(-102.9, -72.95, -207.7)
+	}
+
+	local positions2 = {
+		Vector3.new(-136.9, -72.95, -103.7),
+		Vector3.new(-174.6, -72.95, -164.7),
+		Vector3.new(-147.9, -72.95, -213.7)
+	}
+
+	local positions3 = {
+		Vector3.new(-189.6, -72.95, -145.7),
+		Vector3.new(-168.6, -72.95, -226.7),
+		Vector3.new(-161.9, -72.95, -113.7)
+	}
+
+
+	local function getRandomPosition1()
+		local randomIndex1 = math.random(1, #positions1)
+		return positions1[randomIndex1]
+	end
+	local function getRandomPosition2()
+		local randomIndex2 = math.random(1, #positions2)
+		return positions2[randomIndex2]
+	end
+	local function getRandomPosition3()
+		local randomIndex3 = math.random(1, #positions3)
+		return positions3[randomIndex3]
+	end
+
+
+	local location1 = getRandomPosition1()
+	local location2 = getRandomPosition2()
+	local location3 = getRandomPosition3()
+	wait(0.1)
+	key1.Handle.CFrame = CFrame.new(location1)
+	key2.Handle.CFrame = CFrame.new(location2)
+	key3.Handle.CFrame = CFrame.new(location3)
+
+	--Check Answer system
+	if JodSec4C == "1/sinθ = ?" then
+		key2.Name = "none2"
+		key3.Name = "none3"
+		print(key3.Name)
+		print(key2.Name)
+	elseif JodSec4C == "1/cosθ = ?" then
+		key1.Name = "none1"
+		key3.Name = "none3"
+		print(key3.Name)
+		print(key1.Name)
+	elseif JodSec4C == "cosθ/sinθ = ?" then
+		key1.Name = "none1"
+		key2.Name = "none2"
+	else
+		print('maybe error')
+	end
+
+
+
+
+	--Gameplay wait player touch Lastdoor
+	local Winners =  workspace.InGame:GetChildren()
+	local endtext = "The winners are : "
+	for i,plrChar in ipairs(Winners) do
+		for i, plrChar in ipairs(Winners) do
+			if plrChar.Humanoid.Health <= 0 then continue end
+
+			local door = newGame.DoorMaze
+			-- รอจนกว่าผู้เล่นจะสัมผัสกับ door
+			local hit
+			repeat
+				hit = door.Touched:Wait()
+			until game.Players:GetPlayerFromCharacter(hit.Parent)
+
+			local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+
+			if player then
+				print("Player who touched the door first: " .. player.Name)
+				
+				local Winners = workspace.InGame:GetChildren()
+				local endtext = "The winners are : "
+				for i, plrChar in ipairs(Winners) do
+					if plrChar.Humanoid.Health <= 0 then continue end
+
+					local plr = game.Players:GetPlayerFromCharacter(plrChar)
+					if plr then
+						plr.leaderstats.Maze.Value += 1
+						endtext = endtext .. plr.Name .. " "
+					end
+				end
+				-- อัปเดตสถานะเกม
+				_G.gameStatus.Value = endtext
+
+				--endtext = endtext .. player.Name .. " "
+			end
+		end
+	end
+	
+	
+
+
+	
+	--Destroy tool
+	key1:Destroy()
+	key2:Destroy()
+	key3:Destroy()
+	
+	--End Game
+
+
+	wait(5)
+	newGame:Destroy()
+	stopBlinking = true
+	StatusGame.Statustext.Text = "Choosing..."
+end
+
+return MiniGame

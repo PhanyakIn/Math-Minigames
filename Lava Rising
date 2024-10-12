@@ -1,0 +1,96 @@
+local MiniGame = {}
+local gameModel = script:WaitForChild("GameModel")
+
+local riseTime = 21--21
+local riseDeley = 4--4
+
+local TweenService = game:GetService("TweenService")
+local riseTweenInfo = TweenInfo.new(
+	riseTime,
+	Enum.EasingStyle.Linear,
+	Enum.EasingDirection.InOut,
+	0,
+	false,
+	riseDeley
+)
+
+function MiniGame.RunGame()
+	--set up
+	local newGame = gameModel:Clone()
+	newGame.Parent = workspace
+	local riseTween = TweenService:Create(
+		newGame.LavaPart,
+		riseTweenInfo,
+		{CFrame = newGame.RisePosition.CFrame}
+	)
+	------------------------------------
+	local StatusGame = workspace.StatusGame.StatusGui
+	StatusGame.Statustext.Text = "Lava Rising"
+	
+	
+	local partstatus = workspace.GateSec1
+	local originalColor = partstatus.Color
+	local blinkColor = Color3.fromRGB(255, 75, 75)
+	local stopBlinking = false
+	
+	local music = game.SoundService["Creepy Cuts (B)"]
+	music:Play()
+	spawn(function()
+		while not stopBlinking do
+			-- เปลี่ยนเป็นสีขาว
+			partstatus.Color = blinkColor
+			task.wait(1)
+
+			-- เปลี่ยนกลับเป็นสีเดิม
+			partstatus.Color = originalColor
+			task.wait(1)
+		end
+		partstatus.Color = originalColor
+	end)
+	------------------------------------
+	local randomtextscript = newGame.Showmath.mathhandler
+	randomtextscript.Enabled = false
+
+	--start game
+	randomtextscript.Enabled = true
+	_G.TeleportPlayers(newGame.spawnpoint.CFrame + Vector3.yAxis*20 , true)
+
+
+	riseTween:Play()
+
+
+
+
+	--count down
+	for countdown = riseTime + riseDeley,0,-1 do
+		_G.gameStatus.Value = "Get to the top (".. countdown ..")"--"Get to the top (".. countdown ..")"
+		task.wait(1)
+	end
+
+	--ending
+	local Winners = workspace.InGame:GetChildren()
+	local endtext = "The winners are : "
+	for i, plrChar in ipairs(Winners) do
+		if plrChar.Humanoid.Health <= 0 then continue end
+
+		local plr = game.Players:GetPlayerFromCharacter(plrChar)
+		if plr then
+			plr.leaderstats.Lava.Value += 1
+			endtext = endtext .. plr.Name .. " "
+		end
+	end
+
+	_G.gameStatus.Value = endtext
+
+	StatusGame.Statustext.Text = "Ending"
+
+	
+	wait(3)
+	
+	
+	newGame:Destroy()
+	stopBlinking = true
+	StatusGame.Statustext.Text = "Choosing..."
+end
+
+return MiniGame

@@ -1,0 +1,290 @@
+local MiniGame = {}
+local gameModel = script:WaitForChild("GameModel")
+
+local TweenService = game:GetService("TweenService")
+
+
+function MiniGame.RunGame()
+	--set up
+	local newGame = gameModel:Clone()
+	newGame.Parent = workspace
+	local StatusGame = workspace.StatusGame.StatusGui
+	StatusGame.Statustext.Text = "Trap Colors"
+	
+	local partstatus = workspace.GateSec2
+	local originalColor = partstatus.Color
+	local blinkColor = Color3.fromRGB(95, 255, 87)
+	local stopBlinking = false
+
+	local music = game.SoundService["Running Faster C"]
+	music:Play()
+
+	spawn(function()
+		while not stopBlinking do
+			-- เปลี่ยนเป็นสีขาว
+			partstatus.Color = blinkColor
+			task.wait(1)
+
+			-- เปลี่ยนกลับเป็นสีเดิม
+			partstatus.Color = originalColor
+			task.wait(1)
+		end
+		partstatus.Color = originalColor
+	end)
+	
+	
+	
+	task.wait(1)
+	--_G.gameStatus.Value = "Next game.."
+	_G.TeleportPlayers(newGame.SpawnSec2.CFrame + Vector3.yAxis*5 , true)
+	
+	local wallSec2TweenInfo = TweenInfo.new(
+		2,
+		Enum.EasingStyle.Quad,
+		Enum.EasingDirection.InOut
+
+	)
+	local totalRounds = 5
+	local choosingTime = 5
+
+	local colors = newGame.ColorsSec2:GetChildren()
+	local wallSec2 = newGame.wallSec2
+
+	local closeTween = TweenService:Create(
+		wallSec2,
+		wallSec2TweenInfo,
+		{CFrame = wallSec2.CFrame}
+	)
+	local openTween = TweenService:Create(
+		wallSec2,
+		wallSec2TweenInfo,
+		{CFrame = wallSec2.CFrame + Vector3.yAxis*80}
+	)
+
+	_G.gameStatus.Value = "Choose the correct color"
+	task.wait(4)
+	openTween:Play()
+
+	--start game sec2
+	for round = 1, totalRounds do
+		local chosenColor = colors[math.random(1, #colors)]
+
+		local otherParts = {}
+
+		for _, part in ipairs(colors) do
+			if part ~= chosenColor then
+				table.insert(otherParts, part)
+			end
+		end
+		print("chosen!! : " .. chosenColor.Name .. "")
+		for _, part in ipairs(otherParts) do
+			print(part.Name)
+		end
+		
+		-----------Logic Section2-------------------------------------------------------------------------------
+		local JodSec2 = {"Factors of 42","Factors of 39","Factors of 33","Factors of 54","Factors of 65"}
+		local JodSec2C = JodSec2[math.random(1, #JodSec2)]
+		-- 1, 2, 3, 6, 7, 14, 21, 42
+		-- 1, 3, 13, 39
+		-- 1, 3, 11, 33
+		-- 1, 2, 3, 6, 9, 18, 27, 54
+		-- 1, 5, 13, 65
+		---------Ans system sec2------------------
+		local realAns42 = {"7","2","3","6","7","14","21","42"}
+		local realAns42C = realAns42[math.random(1, #realAns42)]
+		
+		local realAns39 = {"13","3","13","39"}
+		local realAns39C = realAns39[math.random(1, #realAns39)]
+		
+		local realAns33 = {"11","3","11","33"}
+		local realAns33C = realAns33[math.random(1, #realAns33)]
+		
+		local realAns54 = {"9","2","3","6","9","18","27","54"}
+		local realAns54C = realAns54[math.random(1, #realAns54)]
+		
+		local realAns65 = {"13","5","13","65"}
+		local realAns65C = realAns65[math.random(1, #realAns65)]
+		
+		local Ans42 = {"1", "2"}
+		local Ans42C = Ans42[math.random(1, #Ans42)]
+		local Ans39 = {"1"}
+		local Ans39C = Ans39[math.random(1, #Ans39)]
+		local Ans33 = {"1"}
+		local Ans33C = Ans33[math.random(1, #Ans33)]
+		local Ans54 = {"1", "2"}
+		local Ans54C = Ans54[math.random(1, #Ans54)]
+		local Ans65 = {"1"}
+		local Ans65C = Ans65[math.random(1, #Ans65)]
+
+		local Ans42_2 = {"3", "6"}
+		local Ans42_2C = Ans42_2[math.random(1, #Ans42_2)]
+		local Ans39_2 = {"3"}
+		local Ans39_2C = Ans39_2[math.random(1, #Ans39_2)]
+		local Ans33_2 = {"3"}
+		local Ans33_2C = Ans33_2[math.random(1, #Ans33_2)]
+		local Ans54_2 = {"3", "6"}
+		local Ans54_2C = Ans54_2[math.random(1, #Ans54_2)]
+		local Ans65_2 = {"5"}
+		local Ans65_2C = Ans65_2[math.random(1, #Ans65_2)]
+
+		local Ans42_3 = {"7", "14"}
+		local Ans42_3C = Ans42_3[math.random(1, #Ans42_3)]
+		local Ans39_3 = {"13"}
+		local Ans39_3C = Ans39_3[math.random(1, #Ans39_3)]
+		local Ans33_3 = {"11"}
+		local Ans33_3C = Ans33_3[math.random(1, #Ans33_3)]
+		local Ans54_3 = {"9","18"}
+		local Ans54_3C = Ans54_3[math.random(1, #Ans54_3)]
+		local Ans65_3 = {"13"}
+		local Ans65_3C = Ans65_3[math.random(1, #Ans65_3)]
+
+		local Ans42_4 = {"21", "42"}
+		local Ans42_4C = Ans42_4[math.random(1, #Ans42_4)]
+		local Ans39_4 = {"39"}
+		local Ans39_4C = Ans39_4[math.random(1, #Ans39_4)]
+		local Ans33_4 = {"33"}
+		local Ans33_4C = Ans33_4[math.random(1, #Ans33_4)]
+		local Ans54_4 = {"27","54"}
+		local Ans54_4C = Ans54_4[math.random(1, #Ans54_4)]
+		local Ans65_4 = {"65"}
+		local Ans65_4C = Ans65_4[math.random(1, #Ans65_4)]
+
+
+
+		------------------------------------------
+		local FakeAnsSec2 = {"4","8","10","12","19"}
+		local FakeAnsSec2C1 = FakeAnsSec2[math.random(1, #FakeAnsSec2)]
+		local FakeAnsSec2 = {"15","16","17","15","20"}
+		local FakeAnsSec2C2 = FakeAnsSec2[math.random(1, #FakeAnsSec2)]
+		local FakeAnsSec2 = {"22","23","24","25","26"}
+		local FakeAnsSec2C3 = FakeAnsSec2[math.random(1, #FakeAnsSec2)]
+		local FakeAnsSec2 = {"28","29","30","32","34"}
+		local FakeAnsSec2C4 = FakeAnsSec2[math.random(1, #FakeAnsSec2)]
+		
+		
+		local Colorblue = newGame.ColorsSec2.blue.AnswerGui.TextLabel
+		local Colorgreen = newGame.ColorsSec2.green.AnswerGui.TextLabel
+		local Colorred = newGame.ColorsSec2.red.AnswerGui.TextLabel
+		local Coloryellow = newGame.ColorsSec2.yellow.AnswerGui.TextLabel
+
+		local MonitorSec2 = newGame.monitorSec2
+		-----Output-----
+		MonitorSec2.SurfaceGui.TextLabel.Text = JodSec2C
+
+		if JodSec2C == "Factors of 42" then
+			Colorblue.Text = FakeAnsSec2C1
+			Colorgreen.Text = FakeAnsSec2C2
+			Colorred.Text = FakeAnsSec2C3
+			Coloryellow.Text = FakeAnsSec2C4
+			chosenColor.AnswerGui.TextLabel.Text = realAns42C
+		elseif JodSec2C == "Factors of 39" then
+			Colorblue.Text = FakeAnsSec2C1
+			Colorgreen.Text = FakeAnsSec2C2
+			Colorred.Text = FakeAnsSec2C3
+			Coloryellow.Text = FakeAnsSec2C4
+			chosenColor.AnswerGui.TextLabel.Text = realAns39C
+		elseif JodSec2C == "Factors of 33" then
+			Colorblue.Text = FakeAnsSec2C1
+			Colorgreen.Text = FakeAnsSec2C2
+			Colorred.Text = FakeAnsSec2C3
+			Coloryellow.Text = FakeAnsSec2C4
+			chosenColor.AnswerGui.TextLabel.Text = realAns33C
+		elseif JodSec2C == "Factors of 54" then
+			Colorblue.Text = FakeAnsSec2C1
+			Colorgreen.Text = FakeAnsSec2C2
+			Colorred.Text = FakeAnsSec2C3
+			Coloryellow.Text = FakeAnsSec2C4
+			chosenColor.AnswerGui.TextLabel.Text = realAns54C
+		elseif JodSec2C == "Factors of 65" then
+			Colorblue.Text = FakeAnsSec2C1
+			Colorgreen.Text = FakeAnsSec2C2
+			Colorred.Text = FakeAnsSec2C3
+			Coloryellow.Text = FakeAnsSec2C4
+			chosenColor.AnswerGui.TextLabel.Text = realAns65C
+		end
+		---------End Logic Section2----------------------------------------------------------
+
+
+		--choosing time
+		for countDown = choosingTime, 0, -1 do
+			_G.gameStatus.Value = "Round #".. round .. " ; Pick a color (" .. countDown .. ")"
+			task.wait(1)
+		end
+
+		closeTween:Play()
+		task.wait(wallSec2TweenInfo.Time + 1)
+
+		--Eliminate color
+		local chosenColorTweenInfo = TweenInfo.new(
+			3,--1.2
+			Enum.EasingStyle.Quad,
+			Enum.EasingDirection.InOut
+
+		)
+--		local colorTween = TweenService:Create(
+--			chosenColor,
+--			chosenColorTweenInfo,
+--			{CFrame = chosenColor.CFrame}
+--		)
+--		local colorUpTween = TweenService:Create(
+--			chosenColor,
+--			chosenColorTweenInfo,
+--			{CFrame = chosenColor.CFrame + Vector3.yAxis*50}
+--		)
+
+		
+		for _, part in ipairs(otherParts) do
+			local partReturnTween = TweenService:Create(
+				part,
+				chosenColorTweenInfo,
+				{CFrame = part.CFrame}
+			)
+			local partUpTween = TweenService:Create(
+				part,
+				chosenColorTweenInfo,
+				{CFrame = part.CFrame + Vector3.yAxis*52}
+			)
+			partUpTween:Play()
+			wait(0.5)
+		end
+
+--		colorUpTween:Play()
+		task.wait(3)
+		for _, part in ipairs(otherParts) do
+			local partReturnTween = TweenService:Create(
+				part,
+				chosenColorTweenInfo,
+				{CFrame = part.CFrame + Vector3.yAxis*-52}
+			)
+			partReturnTween:Play()
+			wait(0.5)
+		end
+		
+--		colorTween:Play()
+		task.wait(3)
+		openTween:Play()
+
+		--End round
+	end
+	local winners = workspace.InGame:GetChildren()
+	local endtext = "The Winners are : "
+
+	for i, plrChar in ipairs(winners) do
+
+		if plrChar.Humanoid.Health <= 0 then continue end
+
+		local plr = game.Players:GetPlayerFromCharacter(plrChar)
+		plr.leaderstats.Colors.Value += 1
+
+		endtext = endtext .. plr.Name .. " "
+	end
+	_G.gameStatus.Value = endtext
+	
+	
+	wait(3)
+	newGame:Destroy()
+	stopBlinking = true
+	StatusGame.Statustext.Text = "Choosing..."
+end
+
+return MiniGame

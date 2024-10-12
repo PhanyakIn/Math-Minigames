@@ -1,0 +1,321 @@
+local MiniGame = {}
+local gameModel = script:WaitForChild("GameModel")
+
+local TweenService = game:GetService("TweenService")
+
+function MiniGame.RunGame()
+	local newGame = gameModel:Clone()
+	newGame.Parent = workspace
+	
+	--set up
+	local StatusGame = workspace.StatusGame.StatusGui
+	StatusGame.Statustext.Text = "Crazy Snow"
+	
+	local partstatus = workspace.GateSec3
+	local originalColor = partstatus.Color
+	local blinkColor = Color3.fromRGB(83, 255, 244)
+	local stopBlinking = false
+
+	local music = game.SoundService["Dynamix 59"]
+	music:Play()
+	
+	spawn(function()
+		while not stopBlinking do
+			-- เปลี่ยนเป็นสีขาว
+			partstatus.Color = blinkColor
+			task.wait(1)
+
+			-- เปลี่ยนกลับเป็นสีเดิม
+			partstatus.Color = originalColor
+			task.wait(1)
+		end
+		partstatus.Color = originalColor
+	end)
+	
+	
+	--CAM FIXED localscript
+	
+	--
+
+	local wallSec3TweenInfo = TweenInfo.new(
+		2,
+		Enum.EasingStyle.Quad,
+		Enum.EasingDirection.InOut
+
+	)
+	
+	local wallSec3 = newGame.wallsec3
+	
+	local closeTween = TweenService:Create(
+		wallSec3,
+		wallSec3TweenInfo,
+		{CFrame = wallSec3.CFrame}
+	)
+	local openTween = TweenService:Create(
+		wallSec3,
+		wallSec3TweenInfo,
+		{CFrame = wallSec3.CFrame + Vector3.yAxis*80}
+	)
+	
+	local ServerStorage = game:GetService("ServerStorage")
+	local partToClone = ServerStorage:WaitForChild("snowS")
+	local partToCloneM = ServerStorage:WaitForChild("snowM")
+	local partToCloneL = ServerStorage:WaitForChild("snowL")
+
+	local minX, maxX = -207, -165
+	local minY, maxY = 145, 150
+	local minZ, maxZ = -167, -134
+
+	local function getRandomPositionUP()
+		local x = math.random(minX, maxX)
+		local y = math.random(minY, maxY)
+		local z = math.random(minZ, maxZ)
+		return Vector3.new(x, y, z)
+	end
+
+	local function clonePartUP()
+		local clonedPart = partToClone:Clone()
+		local clonedPartM = partToCloneM:Clone()
+		local clonedPartL = partToCloneL:Clone()
+
+		clonedPart.Position = getRandomPositionUP()
+		clonedPart.Parent = game.Workspace
+		task.wait(0.18)
+		clonedPartM.Position = getRandomPositionUP()
+		clonedPartM.Parent = game.Workspace
+		task.wait(0.28)
+		clonedPartL.Position = getRandomPositionUP()
+		clonedPartL.Parent = game.Workspace
+
+		local bodyVelocity = Instance.new("BodyVelocity")
+		bodyVelocity.Velocity = Vector3.new(math.random(-50, 50), -100, math.random(-50, 50))
+		bodyVelocity.P = 1000
+		bodyVelocity.Parent = clonedPart
+
+		local bodyVelocityM = Instance.new("BodyVelocity")
+		bodyVelocityM.Velocity = Vector3.new(math.random(-50, 50), -100, math.random(-50, 50))
+		bodyVelocityM.P = 2000
+		bodyVelocityM.Parent = clonedPartM
+
+		local bodyVelocityL = Instance.new("BodyVelocity")
+		bodyVelocityL.Velocity = Vector3.new(math.random(-50, 50), -100, math.random(-50, 50))
+		bodyVelocityL.P = 3000
+		bodyVelocityL.Parent = clonedPartL
+
+		delay(4, function()--S
+			if clonedPart then
+				clonedPart:Destroy()
+			end
+		end)
+		delay(3.8, function()--M
+			if clonedPartM then
+				clonedPartM:Destroy()
+			end
+		end)
+		delay(3.5, function()--L
+			if clonedPartL then
+				clonedPartL:Destroy()
+			end
+		end)
+	end
+
+	local minXd, maxXd = -159, -117
+	local minYd, maxYd = 145, 150
+	local minZd, maxZd = -168, -133
+
+	local function getRandomPositionDOWN()
+		local xd = math.random(minXd, maxXd)
+		local yd = math.random(minYd, maxYd)
+		local zd = math.random(minZd, maxZd)
+		return Vector3.new(xd, yd, zd)
+	end
+
+	local function clonePartDOWN()
+		local clonedPart = partToClone:Clone()
+		local clonedPartM = partToCloneM:Clone()
+		local clonedPartL = partToCloneL:Clone()
+
+		clonedPart.Position = getRandomPositionDOWN()
+		clonedPart.Parent = game.Workspace
+		task.wait(0.18)
+		clonedPartM.Position = getRandomPositionDOWN()
+		clonedPartM.Parent = game.Workspace
+		task.wait(0.28)
+		clonedPartL.Position = getRandomPositionDOWN()
+		clonedPartL.Parent = game.Workspace
+
+		local bodyVelocity = Instance.new("BodyVelocity")
+		bodyVelocity.Velocity = Vector3.new(math.random(-50, 50), -100, math.random(-50, 50))
+		bodyVelocity.P = 1000
+		bodyVelocity.Parent = clonedPart
+
+		local bodyVelocityM = Instance.new("BodyVelocity")
+		bodyVelocityM.Velocity = Vector3.new(math.random(-50, 50), -100, math.random(-50, 50))
+		bodyVelocityM.P = 2000
+		bodyVelocityM.Parent = clonedPartM
+
+		local bodyVelocityL = Instance.new("BodyVelocity")
+		bodyVelocityL.Velocity = Vector3.new(math.random(-50, 50), -100, math.random(-50, 50))
+		bodyVelocityL.P = 3000
+		bodyVelocityL.Parent = clonedPartL
+
+		delay(4, function()--S
+			if clonedPart then
+				clonedPart:Destroy()
+			end
+		end)
+		delay(3.8, function()--M
+			if clonedPartM then
+				clonedPartM:Destroy()
+			end
+		end)
+		delay(3.5, function()--L
+			if clonedPartL then
+				clonedPartL:Destroy()
+			end
+		end)
+	end
+
+	local function runClonePartLoopUP()
+		for i = 1, 20 do
+			clonePartUP()
+			wait(0.1)
+		end
+	end
+	local function runClonePartLoopDOWN()
+		for i = 1, 20 do
+			clonePartDOWN()
+			wait(0.1)
+		end
+	end
+	
+	_G.TeleportPlayers(newGame.SpawnSec3.CFrame + Vector3.yAxis*5 , true)
+	
+	local monitorSec3 = newGame:WaitForChild("monitorSec3")
+
+	local totalRoundsec3 = 5--5
+	local choosingTimeSec3 = 5--10
+	local JodSec3 = {"y=2(x-1)²+3", "y=4(x-3)²+2", "y=(x-1)²", "y=-3(x-2)²+1", "y=-4(x-3)²+2", "y=-(x-9)²"}
+
+
+	
+	--img
+	local imgUP = newGame:WaitForChild("padup").SurfaceGui.upward
+	local imgDOWN = newGame:WaitForChild("paddown").SurfaceGui.downward
+	
+	local imgPB1 = 'rbxassetid://18845908293'
+	local imgPB2 = 'rbxassetid://18932654472'
+	local imgPB3 = 'rbxassetid://18932674158'
+	local imgPB4 = 'rbxassetid://18932681184'
+	local imgPB5 = 'rbxassetid://18932687871'
+	local imgPB6 = 'rbxassetid://18932704966'
+	local imgWait = 'rbxassetid://134439344925826'
+	--
+	local FakeImgUP = {imgPB4,imgPB5,imgPB6}
+	local FakeImgUPC = FakeImgUP[math.random(1, #FakeImgUP)]
+	local FakeImgDOWN = {imgPB1,imgPB2,imgPB3}
+	local FakeImgDOWNC = FakeImgDOWN[math.random(1, #FakeImgDOWN)]
+
+	--Starting game
+	_G.gameStatus.Value = "Choose the correct graph!"
+	--wait(4)
+	openTween:Play()
+
+	for roundsec3 = 1, totalRoundsec3 do
+		local randomIndex = math.random(1, #JodSec3)
+		local JodSec3C = table.remove(JodSec3, randomIndex)
+		
+		monitorSec3.SurfaceGui.TextLabel.Text = JodSec3C
+		
+		
+		if JodSec3C == "y=2(x-1)²+3" then
+			imgUP.Image = imgWait
+			imgDOWN.Image = imgWait
+			wait(1)
+			imgUP.Image = imgPB1
+			imgDOWN.Image = FakeImgUPC
+		elseif JodSec3C == "y=4(x-3)²+2" then
+			imgUP.Image = imgWait
+			imgDOWN.Image = imgWait
+			wait(1)
+			imgUP.Image = imgPB2
+			imgDOWN.Image = FakeImgUPC
+		elseif JodSec3C == "y=(x-1)²" then----------- +
+			imgUP.Image = imgWait
+			imgDOWN.Image = imgWait
+			wait(1)
+			imgUP.Image = imgPB3
+			imgDOWN.Image = FakeImgUPC
+		elseif JodSec3C == "y=-3(x-2)²+1" then--------- -
+			imgUP.Image = imgWait
+			imgDOWN.Image = imgWait
+			wait(1)
+			imgDOWN.Image = imgPB4
+			imgUP.Image = FakeImgDOWNC
+		elseif JodSec3C == "y=-4(x-3)²+2" then
+			imgUP.Image = imgWait
+			imgDOWN.Image = imgWait
+			wait(1)
+			imgDOWN.Image = imgPB5
+			imgUP.Image = FakeImgDOWNC
+		elseif JodSec3C == "y=-(x-9)²" then
+			imgUP.Image = imgWait
+			imgDOWN.Image = imgWait
+			wait(1)
+			imgDOWN.Image = imgPB6
+			imgUP.Image = FakeImgDOWNC
+		else
+			warn("maybe error!")
+		end
+
+		--choosing time
+		for countDown3 = choosingTimeSec3, 0, -1 do
+			_G.gameStatus.Value = "Round #".. roundsec3 .. " Upward or Downward (" .. countDown3 .. ")"
+			task.wait(1)
+		end
+		
+		closeTween:Play()
+		task.wait(wallSec3TweenInfo.Time + 1)
+		
+		--Snow!
+		if JodSec3C == "y=2(x-1)²+3" or JodSec3C == "y=4(x-3)²+2" or JodSec3C == "y=(x-1)²" then
+			runClonePartLoopUP()
+		elseif JodSec3C == "y=-3(x-2)²+1" or JodSec3C == "y=-4(x-3)²+2" or JodSec3C == "y=-(x-9)²" then
+			runClonePartLoopDOWN()
+		else
+			print("ERROR!!!!")
+		end
+		task.wait(3)
+		openTween:Play()
+	end
+	wait()
+	local resetpartcam = game.ServerStorage:WaitForChild("resetcamPart")
+	resetpartcam.Parent = workspace
+
+	
+	--RESET CAM
+	
+	--Ending
+	local winners = workspace.InGame:GetChildren()
+	local endtext = "The Winners are : "
+
+	for i, plrChar in ipairs(winners) do
+
+		if plrChar.Humanoid.Health <= 0 then continue end
+
+		local plr = game.Players:GetPlayerFromCharacter(plrChar)
+		plr.leaderstats.Snow.Value += 1
+
+		endtext = endtext .. plr.Name .. " "
+	end
+	_G.gameStatus.Value = endtext
+
+
+	wait(3)
+	newGame:Destroy()
+	stopBlinking = true
+	resetpartcam.Parent = ServerStorage
+	StatusGame.Statustext.Text = "Choosing..."
+end
+
+return MiniGame

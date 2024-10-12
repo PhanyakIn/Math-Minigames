@@ -1,0 +1,49 @@
+local miniGames = game.ServerStorage:WaitForChild("MiniGames"):GetChildren()
+local gameStatus = game.ReplicatedStorage:WaitForChild("GameStatus")
+_G.gameStatus = gameStatus
+
+local lobbyCFrame = workspace:WaitForChild("lobby"):WaitForChild("SpawnLocation").CFrame + Vector3.yAxis*30
+
+local TeleportPlayers = require(game.ServerStorage:WaitForChild("TeleportPlayers"))
+_G.TeleportPlayers = TeleportPlayers
+
+--local BasicEnding = require(game.ServerStorage:WaitForChild("BasicEnding"))
+--_G.BasicEnding = BasicEnding
+local musicLava = game.SoundService["Creepy Cuts (B)"]
+local musicColors = game.SoundService["Running Faster C"]
+local musicSnow = game.SoundService["Dynamix 59"]
+local musicMaze = game.SoundService["Running Faster A"]
+local skipsound = game.SoundService["DJ  Spin Sound Effect"]
+
+local INTERMISSION = 10--10
+
+while true do
+	
+	-- intermisison
+	for countDown = INTERMISSION, 0, -1 do
+		gameStatus.Value = "Starts in " .. countDown
+		task.wait(1)
+	end
+
+	-- choose mini game
+	gameStatus.Value = "Choosing game..."
+	task.wait(2)
+	
+	local chosenGameModule = miniGames[math.random(#miniGames)]
+	gameStatus.Value = chosenGameModule.Name .. " has been chosen!"
+	task.wait(2)
+	musicLava:Stop()
+	musicColors:Stop()
+	musicSnow:Stop()
+	musicMaze:Stop()
+	skipsound:Play()
+	-- run mini game
+	require(chosenGameModule).RunGame()
+
+	
+	-- end mini game
+	TeleportPlayers(lobbyCFrame)
+	gameStatus.Value = "End!"
+
+	task.wait(1)
+end

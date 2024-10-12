@@ -1,0 +1,68 @@
+local DataStoreService = game:GetService("DataStoreService")
+local playerDataStore = DataStoreService:GetDataStore("PlayerData")
+
+
+local function savePlayerData(player)
+	local success, err = pcall(function()
+		
+		local dataToSave = {
+			Lava = player.leaderstats.Lava.Value,
+			Colors = player.leaderstats.Colors.Value,
+			Snow = player.leaderstats.Snow.Value,
+			Maze = player.leaderstats.Maze.Value
+		}
+		playerDataStore:SetAsync(player.UserId, dataToSave)
+	end)
+
+	if not success then
+		warn("Failed to save data for player: ".. player.Name ..". Error: ".. err)
+	end
+end
+
+-- ฟังก์ชันสำหรับโหลดข้อมูลเมื่อผู้เล่นเข้ามาในเกม
+local function loadPlayerData(player)
+	local success, data = pcall(function()
+		return playerDataStore:GetAsync(player.UserId)
+	end)
+
+	if success and data then
+		-- ปรับแต่งการโหลดข้อมูลที่นี่
+		player.leaderstats.Lava.Value = data.Lava or 0
+		player.leaderstats.Colors.Value = data.Colors or 0
+		player.leaderstats.Snow.Value = data.Snow or 0
+		player.leaderstats.Maze.Value = data.Maze or 0
+	else
+		warn("Failed to load data for player: ".. player.Name)
+	end
+end
+
+
+
+--Leaderstats
+local Players = game:GetService("Players")
+
+Players.PlayerAdded:Connect(function(player)
+	local leaderstatsFolder = Instance.new("Folder", player)
+	leaderstatsFolder.Name = "leaderstats"
+
+	local winsStat = Instance.new("NumberValue", leaderstatsFolder)
+	winsStat.Name = "Lava"
+	winsStat.Value = 0
+	local winsStat2 = Instance.new("NumberValue", leaderstatsFolder)
+	winsStat2.Name = "Colors"
+	winsStat2.Value = 0
+	local winsStat3 = Instance.new("NumberValue", leaderstatsFolder)
+	winsStat3.Name = "Snow"
+	winsStat3.Value = 0
+	local winsStat4 = Instance.new("NumberValue", leaderstatsFolder)
+	winsStat4.Name = "Maze"
+	winsStat4.Value = 0
+	
+	loadPlayerData(player)
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+	savePlayerData(player)
+end)
+	
+
